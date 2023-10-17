@@ -42,7 +42,7 @@ public class QueryTest {
 	public void testSimple() {
 		Query q = new Query("SELECT a1, a2 FROM A");
 		Relation r = q.execute();
-		
+		System.out.println(r.getTuples().toString());
 		assertTrue(r.getTuples().size() == 8);
 		assertTrue(r.getDesc().getSize() == 8);
 	}
@@ -70,7 +70,7 @@ public class QueryTest {
 	public void testJoin() {
 		Query q = new Query("SELECT c1, c2, a1, a2 FROM test JOIN A ON test.c1 = a.a1");
 		Relation r = q.execute();
-		
+		System.out.println(r.getTuples().size());
 		assert(r.getTuples().size() == 5);
 		assert(r.getDesc().getSize() == 141);
 	}
@@ -82,6 +82,7 @@ public class QueryTest {
 		
 		assertTrue(r.getTuples().size() == 1);
 		IntField agg = (IntField) (r.getTuples().get(0).getField(0));
+		//System.out.println();
 		assertTrue(agg.getValue() == 36);
 	}
 	
