@@ -1,7 +1,7 @@
 package hw1;
 
 import java.sql.Types;
-import java.util.HashMap;
+
 
 /**
  * This class represents a tuple that will contain a single row's worth of information
@@ -11,17 +11,25 @@ import java.util.HashMap;
  */
 public class Tuple {
 	
+	
+	private TupleDesc td;
+	private Field[] fields;
+	private int id;
+	private int pid;
+
 	/**
 	 * Creates a new tuple with the given description
 	 * @param t the schema for this tuple
 	 */
 	public Tuple(TupleDesc t) {
+		this.fields = new Field[t.numFields()];
+		this.td = t;
 		//your code here
 	}
 	
 	public TupleDesc getDesc() {
 		//your code here
-		return null;
+		return td;
 	}
 	
 	/**
@@ -29,11 +37,13 @@ public class Tuple {
 	 * @return the page id of this tuple
 	 */
 	public int getPid() {
+		
 		//your code here
-		return 0;
+		return pid;
 	}
 
 	public void setPid(int pid) {
+		 this.pid=pid;
 		//your code here
 	}
 
@@ -43,14 +53,16 @@ public class Tuple {
 	 */
 	public int getId() {
 		//your code here
-		return 0;
+		return id;
 	}
 
 	public void setId(int id) {
+		this.id = id;
 		//your code here
 	}
 	
 	public void setDesc(TupleDesc td) {
+		this.td=td;
 		//your code here;
 	}
 	
@@ -60,12 +72,15 @@ public class Tuple {
 	 * @param v the data
 	 */
 	public void setField(int i, Field v) {
+		if(i<fields.length) {
+			this.fields[i]=v;
+		}
 		//your code here
 	}
 	
 	public Field getField(int i) {
 		//your code here
-		return null;
+		return fields[i];
 	}
 	
 	/**
@@ -75,7 +90,12 @@ public class Tuple {
 	 */
 	public String toString() {
 		//your code here
-		return "";
+		String present = "";
+		for(int i =0;i<fields.length;i++) {
+			String str = fields[i].toString();
+			present+=str+"\t";
+		}
+		return present;
 	}
 }
 	

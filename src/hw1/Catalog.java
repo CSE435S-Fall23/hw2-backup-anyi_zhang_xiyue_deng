@@ -15,13 +15,42 @@ import java.util.*;
  */
 
 public class Catalog {
-	
+	private class Inner{
+		public String pkeyField;
+		public HeapFile table;
+		public String name;
+		public Integer id;
+		public Inner(Integer id, HeapFile table, String pkeyField,String name) {
+	            this.id = id;
+	            this.table = table;
+	            this.pkeyField = pkeyField;
+	            this.name = name;
+	        }
+	    public HeapFile getHeapFile() {
+	    	System.out.println("getHeapFile");
+	            return this.table;
+	        }
+	    public String getPkeyField() {
+	            return this.pkeyField;
+	        }
+	    public String getName() {
+	            return this.name;
+	        }
+	    public Integer getId() {
+            return this.id;
+        }
+	}
+	public HashMap<String,Inner> newCatalog;
+
     /**
      * Constructor.
      * Creates a new, empty catalog.
      */
     public Catalog() {
+    	this.newCatalog = new HashMap<String,Inner>();  
+  
     	//your code here
+    	
     }
 
     /**
@@ -30,12 +59,17 @@ public class Catalog {
      * @param file the contents of the table to add;  file.getId() is the identfier of
      *    this file/tupledesc param for the calls getTupleDesc and getFile
      * @param name the name of the table -- may be an empty string.  May not be null.  If a name conflict exists, use the last table to be added as the table for a given name.
+     * 是不加入的意思？？？？？？
      * @param pkeyField the name of the primary key field
      */
     public void addTable(HeapFile file, String name, String pkeyField) {
+  
+    	Inner newTable = new Inner(file.getId(),file,pkeyField,name);
+    	newCatalog.put(name, newTable);
     	//your code here
     }
-
+    
+    //???????这啥意思？
     public void addTable(HeapFile file, String name) {
         addTable(file,name,"");
     }
@@ -44,9 +78,9 @@ public class Catalog {
      * Return the id of the table with a specified name,
      * @throws NoSuchElementException if the table doesn't exist
      */
-    public int getTableId(String name) {
+    public int getTableId(String name){
     	//your code here
-    	return 0;
+    	return newCatalog.get(name).getId();
     }
 
     /**
@@ -56,7 +90,16 @@ public class Catalog {
      */
     public TupleDesc getTupleDesc(int tableid) throws NoSuchElementException {
     	//your code here
-    	return null;
+    	for(Inner i:newCatalog.values()) {
+    		System.out.println(i.getId());
+    		if(tableid ==i.getId()) {
+    			System.out.println(tableid+"inner");
+    			HeapFile newhf = i.getHeapFile();
+    			System.out.println("tupledesc");
+    			return newhf.getTupleDesc();
+    		}
+    	}
+    	throw new NoSuchElementException("not exist");
     }
 
     /**
@@ -67,27 +110,48 @@ public class Catalog {
      */
     public HeapFile getDbFile(int tableid) throws NoSuchElementException {
     	//your code here
-    	return null;
+    	for(Inner i:newCatalog.values()) {
+    		if(tableid ==i.getId()) {
+    			return i.getHeapFile();
+    		}
+    	}
+    	throw new NoSuchElementException("not exist");
     }
 
     /** Delete all tables from the catalog */
     public void clear() {
+    	newCatalog.clear();
     	//your code here
     }
 
     public String getPrimaryKey(int tableid) {
     	//your code here
+    	for(Inner i:newCatalog.values()) {
+    		if(tableid ==i.getId()) {
+    			return i.getPkeyField();
+    		}
+    	}
     	return null;
     }
 
     public Iterator<Integer> tableIdIterator() {
     	//your code here
-    	return null;
+    	ArrayList<Integer> keys = new ArrayList<>();
+    	for(Inner i : newCatalog.values()) {
+    		keys.add(i.getId());
+    	}
+    	
+    	return keys.iterator();
     }
 
     public String getTableName(int id) {
     	//your code here
-    	return null;
+    	for(Inner i : newCatalog.values()) {
+    		if(i.getId()==id) {
+    			return i.getName();
+    		}
+    	}
+    	throw new NoSuchElementException("not exist");
     }
     
     /**

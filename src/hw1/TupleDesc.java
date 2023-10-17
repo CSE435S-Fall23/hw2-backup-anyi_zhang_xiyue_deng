@@ -6,27 +6,30 @@ import java.util.*;
  */
 public class TupleDesc {
 
-	private Type[] types;
-	private String[] fields;
+	private Type[] types;// int/string 
+	private String[] fields;// name of fields
+	
 	
     /**
      * Create a new TupleDesc with typeAr.length fields with fields of the
      * specified types, with associated named fields.
      *
      * @param typeAr array specifying the number of and types of fields in
-     *        this TupleDesc. It must contain at least one entry.
+     *        this TupleDesc. It must contain at least one entry.(num, type),(num,type)
+     *      
      * @param fieldAr array specifying the names of the fields. Note that names may be null.
-     */
+     */                                                          // (name,name,name)
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
     	//your code here
+    	this.fields = fieldAr;
+    	this.types = typeAr;
     }
-
     /**
      * @return the number of fields in this TupleDesc
      */
     public int numFields() {
         //your code here
-    	return 0;
+    	return types.length;
     }
 
     /**
@@ -38,7 +41,10 @@ public class TupleDesc {
      */
     public String getFieldName(int i) throws NoSuchElementException {
         //your code here
-    	return null;
+    	if(fields[i]!=null) {
+    		return fields[i];
+    	}
+    	throw new NoSuchElementException("not valid for field name");
     }
 
     /**
@@ -50,7 +56,12 @@ public class TupleDesc {
      */
     public int nameToId(String name) throws NoSuchElementException {
         //your code here
-    	return 0;
+    	for(int i = 0; i<fields.length;i++) {
+    		if(name.equals(fields[i])) {
+    			return i;
+    		}
+    	}
+    	throw new NoSuchElementException("can not find index of the field with a given name");
     }
 
     /**
@@ -62,7 +73,10 @@ public class TupleDesc {
      */
     public Type getType(int i) throws NoSuchElementException {
         //your code here
-    	return null;
+    	if(i<0||i>fields.length||types[i]==null) {
+    		throw new NoSuchElementException("no type of the ith field of this TupleDesc");
+    	}
+    	return types[i];
     }
 
     /**
@@ -71,7 +85,16 @@ public class TupleDesc {
      */
     public int getSize() {
     	//your code here
-    	return 0;
+    	int size = 0;
+    	for (int i =0; i<types.length;i++) {
+    		if(types[i].equals(types[i].INT)) {
+    			size = size+4;
+    		}
+    		else if(types[i].equals(types[i].STRING)) {
+    			size = size+129;
+    		}
+    	}
+    	return size;
     }
 
     /**
@@ -84,7 +107,16 @@ public class TupleDesc {
      */
     public boolean equals(Object o) {
     	//your code here
-    	return false;
+    	TupleDesc otherObject = (TupleDesc) o;
+    	if(otherObject.types.length!=this.types.length) {
+    		return false;
+    	}
+    	for(int i = 0; i<this.types.length;i++) {
+    		if(otherObject.types[i]!=this.types[i]) {
+    			return false;
+    		}
+    	}
+    	return true;
     }
     
 
@@ -102,6 +134,10 @@ public class TupleDesc {
      */
     public String toString() {
         //your code here
-    	return "";
+    	String s= "";
+    	for(int i =0; i<fields.length;i++) {
+    		s=s+ types[i]+"\t"+fields[i]+"\t";
+    	}
+    	return s;
     }
 }
